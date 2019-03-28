@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StarChart.Data;
+using StarChart.Models;
 
 namespace StarChart.Controllers
 {
@@ -73,6 +74,38 @@ namespace StarChart.Controllers
             }
 
             return Ok(results);
+        }
+
+        [HttpPost]
+        public IActionResult Create([FromBody]CelestialObject celestialObject)
+        {
+            // TODO: Object sanitization
+
+            var result = _context.CelestialObjects.Add(celestialObject);
+            _context.SaveChanges();
+
+            // TODO: Review use of celestialObject vs result.Entity
+            return CreatedAtRoute(nameof(GetById), new { id = result.Entity.Id }, result.Entity);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, [FromBody]CelestialObject co)
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpPatch("{id}/{name}")]
+        public IActionResult RenameObject(int id, string name)
+        {
+
+            throw new NotImplementedException();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+
+            throw new NotImplementedException();
         }
     }
 }
