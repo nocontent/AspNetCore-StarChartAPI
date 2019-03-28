@@ -121,8 +121,23 @@ namespace StarChart.Controllers
         [HttpPatch("{id}/{name}")]
         public IActionResult RenameObject(int id, string name)
         {
+            var existingObject = _context.CelestialObjects.FirstOrDefault(c => c.Id == id);
 
-            throw new NotImplementedException();
+            if (existingObject == null)
+            {
+                return NotFound();
+            }
+
+            if (name.Length < 1)
+            {
+                return BadRequest();
+            }
+
+            existingObject.Name = name;
+            _context.CelestialObjects.Update(existingObject);
+            _context.SaveChanges();
+
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
