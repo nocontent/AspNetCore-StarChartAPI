@@ -89,9 +89,33 @@ namespace StarChart.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody]CelestialObject co)
+        public IActionResult Update(int id, CelestialObject celestialObject)
         {
-            throw new NotImplementedException();
+
+            // Option A
+            // if (id != celestialObject.Id)
+            // {
+            //     return BadRequest();
+            // }
+            // _context.Entry(co).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            // _context.SaveChanges();
+
+            // Option B - required by Iris
+            var existingObject = _context.CelestialObjects.FirstOrDefault(c => c.Id == id);
+
+            if (existingObject == null)
+            {
+                return NotFound();
+            }
+
+            existingObject.Name = celestialObject.Name;
+            existingObject.OrbitalPeriod = celestialObject.OrbitalPeriod;
+            existingObject.OrbitedObjectId = celestialObject.OrbitedObjectId;
+
+            _context.CelestialObjects.Update(existingObject);
+            _context.SaveChanges();
+
+            return NoContent();
         }
 
         [HttpPatch("{id}/{name}")]
